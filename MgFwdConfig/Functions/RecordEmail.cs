@@ -6,6 +6,7 @@ using System.Net.Http;
 using Microsoft.Azure.WebJobs.Host;
 using System.Threading.Tasks;
 using MgFwdConfig.Models;
+using Microsoft.WindowsAzure.Storage.Table;
 
 namespace MgFwdConfig.Functions
 {
@@ -13,7 +14,7 @@ namespace MgFwdConfig.Functions
     {
         public static async Task<HttpResponseMessage> Run(
             HttpRequestMessage req,
-            //IQueryable<EmailFwd> emailFwdTable,
+            IQueryable<EmailFwd> emailFwdTable,
             TraceWriter log)
         {
             try
