@@ -17,8 +17,7 @@ namespace MgFwdConfig.Models
         public string LocalPart => RowKey;
         public string SentTo => $"{RowKey}@{PartitionKey}";
 
-        public EmailFwd(string localPart, string domain) : base(localPart, domain)
-        {
-        }
+        public EmailFwd() : base() { }
+        public EmailFwd(string localPart, string domain) : base(localPart, domain) { }
     }
 }
