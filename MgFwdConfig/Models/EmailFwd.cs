@@ -13,11 +13,16 @@ namespace MgFwdConfig.Models
         public int Priority { get; set; }
         public RuleType RuleType { get; set; }
 
-        public string Domain => PartitionKey;
-        public string LocalPart => RowKey;
-        public string SentTo => $"{RowKey}@{PartitionKey}";
+        public string Domain { get { return PartitionKey; } set { PartitionKey = value; } }
+        public string LocalPart { get { return RowKey; } set { RowKey = value; } }
+        public string SentTo => $"{LocalPart}@{Domain}";
 
         public EmailFwd() : base() { }
         public EmailFwd(string localPart, string domain) : base(localPart, domain) { }
+
+        public override string ToString()
+        {
+            return SentTo;
+        }
     }
 }
