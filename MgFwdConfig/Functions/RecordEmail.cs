@@ -8,6 +8,7 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Microsoft.WindowsAzure.Storage.Table;
+using System.Linq;
 
 namespace MgFwdConfig.Functions
 {
@@ -19,15 +20,17 @@ namespace MgFwdConfig.Functions
             [Table("EmailFwd")] CloudTable emailFwdTable,
             ILogger log)
         {
+            string data = null;
+
             try
             {
-                string data = await req.Content.ReadAsStringAsync();
+                data = await req.Content.ReadAsStringAsync();
                 log.LogTrace("Body: [[{data}]]", data);
 
-                var mg = JsonConvert.DeserializeObject<MgForwardedEmail>(data);
-                log.LogDebug("Recipient: [[{Recipient}]]", mg.Recipient);
+                var recipient = GetRecipient(data);
+                log.LogDebug("Recipient: [[{recipient}]]", recipient);
 
-                var fwd = new EmailFwd(mg.Recipient);
+                var fwd = new EmailFwd(recipient);
                 log.LogDebug("EmailFwd: [[{fwd}]]", fwd.ToString());
 
                 var insert = TableOperation.InsertOrReplace(fwd);
@@ -36,10 +39,22 @@ namespace MgFwdConfig.Functions
             catch (Exception ex)
             {
                 log.LogError(ex.Message);
+                log.LogDebug("Body: [[{data}]]", data);
                 return new StatusCodeResult(406);
             }
 
             return new OkObjectResult("");
+        }
+
+        private static string GetRecipient(string data)
+        {
+            return Uri.UnescapeDataString(
+                data
+                    .Split('&')
+                    .First(kvp => kvp.StartsWith("recipient=", StringComparison.InvariantCultureIgnoreCase))
+                    .Split('=')
+                    .Skip(1)
+                    .Last());
         }
     }
 }

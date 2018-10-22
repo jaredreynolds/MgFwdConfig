@@ -3,7 +3,7 @@
     "logging": {
         //"fileLoggingMode": "always",
         "logLevel": {
-            //"Function.RecordEmail": "Debug"
+            "Function.RecordEmail": "Debug"
             //"default": "Trace"
         }
     }
