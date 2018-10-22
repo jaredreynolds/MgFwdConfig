@@ -1,8 +1,10 @@
 {
     "version": "2.0",
     "logging": {
+        //"fileLoggingMode": "always",
         "logLevel": {
             //"Function.RecordEmail": "Debug"
+            //"default": "Trace"
         }
     }
 }

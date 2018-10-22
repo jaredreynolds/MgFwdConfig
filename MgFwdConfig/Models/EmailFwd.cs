@@ -20,6 +20,10 @@ namespace MgFwdConfig.Models
 
         public EmailFwd() : base() { }
         public EmailFwd(string localPart, string domain) : base(localPart, domain) { }
+        public EmailFwd(string sentTo) : base()
+        {
+            (LocalPart, Domain) = SplitEmail(sentTo);
+        }
 
         public override IDictionary<string, EntityProperty> WriteEntity(OperationContext operationContext)
         {
@@ -29,6 +33,12 @@ namespace MgFwdConfig.Models
         public override string ToString()
         {
             return SentTo;
+        }
+
+        private (string LocalPart, string Domain) SplitEmail(string email)
+        {
+            var parts = email.Split('@');
+            return (parts[0], parts[1]);
         }
     }
 }

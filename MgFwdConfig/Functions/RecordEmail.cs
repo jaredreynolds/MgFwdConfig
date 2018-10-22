@@ -22,10 +22,13 @@ namespace MgFwdConfig.Functions
             try
             {
                 string data = await req.Content.ReadAsStringAsync();
-                log.LogDebug(data);
+                log.LogTrace("Body: [[{data}]]", data);
 
-                var fwd = JsonConvert.DeserializeObject<EmailFwd>(data);
-                log.LogDebug(fwd.ToString());
+                var mg = JsonConvert.DeserializeObject<MgForwardedEmail>(data);
+                log.LogDebug("Recipient: [[{Recipient}]]", mg.Recipient);
+
+                var fwd = new EmailFwd(mg.Recipient);
+                log.LogDebug("EmailFwd: [[{fwd}]]", fwd.ToString());
 
                 var insert = TableOperation.InsertOrReplace(fwd);
                 var result = await emailFwdTable.ExecuteAsync(insert);
@@ -33,7 +36,7 @@ namespace MgFwdConfig.Functions
             catch (Exception ex)
             {
                 log.LogError(ex.Message);
-                return new UnprocessableEntityObjectResult("");
+                return new StatusCodeResult(406);
             }
 
             return new OkObjectResult("");
