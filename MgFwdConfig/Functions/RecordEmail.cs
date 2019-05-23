@@ -12,7 +12,7 @@ using System.Linq;
 
 namespace MgFwdConfig.Functions
 {
-    public class RecordEmail
+    public static class RecordEmail
     {
         [FunctionName("RecordEmail")]
         public static async Task<IActionResult> Run(
